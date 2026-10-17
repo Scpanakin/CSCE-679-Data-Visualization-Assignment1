@@ -7,7 +7,10 @@ df.dropna(inplace=True)
 
 df['date'] = pd.to_datetime(df['date'])
 
-df['year'] = df['date'].dt.year
-df['month'] = df['date'].dt.month
+# rows will be months and columns will be year
+matrix = df.groupby([df.date.dt.year, df.date.dt.month]).agg(
+    tmax=('max_temperature', 'max'), tmin=('min_temperature', 'min')
+)
+grid_max = matrix['tmax'].unstack(0)
+grid_min = matrix['tmin'].unstack(0)
 
-print(df)
